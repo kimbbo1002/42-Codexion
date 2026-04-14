@@ -6,13 +6,13 @@
 /*   By: bokim <bokim@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 16:41:35 by bokim             #+#    #+#             */
-/*   Updated: 2026/04/14 18:36:32 by bokim            ###   ########.fr       */
+/*   Updated: 2026/04/14 19:18:22 by bokim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-int	init_dongles(t_hub *hub)
+static int	init_dongles(t_hub *hub)
 {
 	int	i;
 
@@ -30,7 +30,7 @@ int	init_dongles(t_hub *hub)
 	return (1);
 }
 
-int	init_coders(t_hub *hub)
+static int	init_coders(t_hub *hub)
 {
 	int	i;
 

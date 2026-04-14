@@ -6,13 +6,14 @@
 /*   By: bokim <bokim@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 13:54:43 by bokim             #+#    #+#             */
-/*   Updated: 2026/04/14 19:14:37 by bokim            ###   ########.fr       */
+/*   Updated: 2026/04/14 19:22:45 by bokim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CODEXION_H
 # define CODEXION_H
 
+//standard header files
 # include <pthread.h>
 # include <stdbool.h>
 # include <stdio.h>
@@ -21,6 +22,7 @@
 # include <sys/time.h>
 # include <unistd.h>
 
+//struct definitions
 typedef struct s_config
 {
 	int				num_coder;
@@ -67,11 +69,27 @@ typedef struct s_hub
 	pthread_mutex_t	print_lock;
 }					t_hub;
 
-int		parse_args(int argc, char **args, t_config *config);
-int		get_running_status(t_hub *hub);
-void	print_action(t_coder *coder, char *msg);
-void	controlled_sleep(unsigned long sleep, t_hub *hub);
-void	*coder_routine(void *coder_struct);
-void	*monitor_threads(void *hub_struct);
+//parsing.c
+int				parse_args(int argc, char **args, t_hub *hub);
+
+//init.c
+int				init_hub(t_hub *hub, t_config *config);
+
+//hub.c
+int				start_hub(t_hub *hub);
+int				stop_hub(t_hub *hub);
+int				clean_hub(t_hub *hub);
+
+//coder.c
+void			*coder_routine(void *coder_struct);
+
+//monitor.c
+void			*monitor_threads(void *hub_struct);
+
+//utils.c
+unsigned long	get_time(void);
+int				get_running_status(t_hub *hub);
+void			print_action(t_coder *coder, char *msg);
+void			controlled_sleep(unsigned long sleep, t_hub *hub);
 
 #endif
