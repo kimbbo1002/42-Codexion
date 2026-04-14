@@ -6,7 +6,7 @@
 /*   By: bokim <bokim@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 13:54:43 by bokim             #+#    #+#             */
-/*   Updated: 2026/04/14 16:21:25 by bokim            ###   ########.fr       */
+/*   Updated: 2026/04/14 19:14:37 by bokim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct s_coder
 	pthread_t		thread_id;
 	int				compile_count;
 	unsigned long	last_compile;
+	pthread_mutex_t	compile_lock;
 
 	t_dongle		*left_dongle;
 	t_dongle		*right_dongle;
@@ -55,6 +56,7 @@ typedef struct s_coder
 
 typedef struct s_hub
 {
+	pthread_t		monitor_id;
 	t_config		*config;
 	t_coder			*coders;
 	t_dongle		*dongles;
@@ -69,5 +71,7 @@ int		parse_args(int argc, char **args, t_config *config);
 int		get_running_status(t_hub *hub);
 void	print_action(t_coder *coder, char *msg);
 void	controlled_sleep(unsigned long sleep, t_hub *hub);
+void	*coder_routine(void *coder_struct);
+void	*monitor_threads(void *hub_struct);
 
 #endif

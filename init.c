@@ -6,7 +6,7 @@
 /*   By: bokim <bokim@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 16:41:35 by bokim             #+#    #+#             */
-/*   Updated: 2026/04/14 16:56:17 by bokim            ###   ########.fr       */
+/*   Updated: 2026/04/14 18:36:32 by bokim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int	init_coders(t_hub *hub)
 		hub->coders[i].right_dongle = &hub->dongles[(i + 1)
 			% hub->config->num_coder];
 		hub->coders[i].last_compile = get_time();
+		pthread_mutex_init(&hub->coders[i].compile_lock, NULL);
 		i++;
 	}
 	return (1);
@@ -56,21 +57,24 @@ int	init_hub(t_hub *hub, t_config *config)
 {
 	int	res_dong;
 	int	res_cod;
+	int	i;
 
 	hub->config = config;
 	hub->running = true;
 	hub->start_time = get_time();
-	res_dong = init_dongles(hub);
-	res_cod = init_coders(hub);
-	if (!res_dong || !res_cod)
+	if (!init_dongles(hub) || !init_coders(hub))
 	{
-		if (res_dong)
-			;
-		free(hub->coders);
-		if (res_cod)
-			free(hub->coders);
+		if (hub->dongles)
+		{
+			i = 0;
+			while (i < hub->config->num_coder)
+				pthread_mutex_destroy(&hub->dongles[i++].lock);
+			free(hub->dongles);
+		}
 		printf("Error: Failed to initiate hub");
 		return (0);
 	}
+	pthread_mutex_init(&hub->stop_lock, NULL);
+	pthread_mutex_init(&hub->print_lock, NULL);
 	return (1);
 }
