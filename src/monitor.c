@@ -6,7 +6,7 @@
 /*   By: bokim <bokim@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 18:45:33 by bokim             #+#    #+#             */
-/*   Updated: 2026/04/17 16:06:49 by bokim            ###   ########.fr       */
+/*   Updated: 2026/04/17 16:20:07 by bokim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 static int	check_burnouts(t_hub *hub)
 {
-	int	i;
+	int				i;
+	unsigned long	time;
 
 	i = 0;
 	while (i < hub->config->num_coder)
@@ -27,7 +28,10 @@ static int	check_burnouts(t_hub *hub)
 			hub->running = 0;
 			pthread_mutex_unlock(&hub->stop_lock);
 			pthread_mutex_unlock(&hub->coders[i].compile_lock);
-			print_post_action(&hub->coders[i], "burned out");
+			pthread_mutex_lock(&hub->print_lock);
+			time = get_time() - hub->start_time;
+			printf("%lu %d burned out\n", time, hub->coders[i].id);
+			pthread_mutex_unlock(&hub->print_lock);
 			return (1);
 		}
 		pthread_mutex_unlock(&hub->coders[i].compile_lock);
@@ -71,7 +75,8 @@ void	*monitor_threads(void *hub_struct)
 			pthread_mutex_unlock(&hub->stop_lock);
 			pthread_mutex_lock(&hub->print_lock);
 			time = get_time() - hub->start_time;
-			printf("%lu all coders have completed %i compiles", time, hub->config->num_compiles);
+			printf("%lu all coders have completed %i compiles\n", time,
+				hub->config->num_compiles);
 			pthread_mutex_unlock(&hub->print_lock);
 			break ;
 		}

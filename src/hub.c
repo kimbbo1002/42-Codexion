@@ -64,4 +64,3 @@ void	dongle_cooldown(t_coder *coder)
 {
 	controlled_sleep(coder->hub->config->dongle_cooldown, coder->hub);
 }
-

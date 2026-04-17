@@ -75,7 +75,7 @@ void	*coder_routine(void *coder_struct)
 		if (!coder->hub->config->scheduler)
 			yield_edf(coder);
 		if (compile(coder) || debug(coder) || refactor(coder))
-			break;
+			break ;
 	}
 	return (NULL);
 }
