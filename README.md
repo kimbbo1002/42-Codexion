@@ -65,7 +65,7 @@ The program must be executed with the following arguments:
 ### Examples
   - **Normal Case**
   ```
-  ./codexion 5 800 200 200 200 5 50 fifo
+  ./codexion 5 2000 200 100 100 5 50 fifo
   ```
   - **Burnout Case:**
   ```

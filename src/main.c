@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bokim <bokim@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:48:41 by bokim             #+#    #+#             */
-/*   Updated: 2026/04/17 15:56:39 by bokim            ###   ########.fr       */
+/*   Updated: 2026/05/10 17:19:17 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,10 @@ int	main(int argc, char **argv)
 {
 	t_hub		hub;
 	t_config	config;
+	t_heap		scheduler;
 
 	hub.config = &config;
+	hub.scheduler = &scheduler;
 	if (!parse_args(argc, argv, &hub))
 		return (0);
 	if (!init_hub(&hub))

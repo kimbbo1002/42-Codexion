@@ -6,7 +6,7 @@
 /*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 15:25:58 by bokim             #+#    #+#             */
-/*   Updated: 2026/04/19 21:01:04 by pc               ###   ########.fr       */
+/*   Updated: 2026/05/10 17:23:23 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,11 @@ void	*coder_routine(void *coder_struct)
 		usleep(1000);
 	while (get_running_status(coder->hub))
 	{
-		if (!coder->hub->config->scheduler)
-			yield_edf(coder);
-		if (compile(coder) || debug(coder) || refactor(coder))
+		wait_for_turn(coder);
+		if (compile(coder))
+			break ;
+		heap_pop(coder->hub->scheduler);
+		if (debug(coder) || refactor(coder))
 			break ;
 	}
 	return (NULL);

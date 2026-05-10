@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bokim <bokim@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 16:41:35 by bokim             #+#    #+#             */
-/*   Updated: 2026/04/17 15:45:47 by bokim            ###   ########.fr       */
+/*   Updated: 2026/05/10 18:34:07 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,21 @@ static int	init_coders(t_hub *hub)
 	return (1);
 }
 
+static int	init_scheduler(t_hub *hub)
+{
+	hub->scheduler->nodes = malloc(sizeof(t_heap_node)
+			* hub->config->num_coder);
+	if (!hub->scheduler->nodes)
+		return (0);
+	hub->scheduler->size = 0;
+	hub->count = 0;
+	pthread_mutex_init(&hub->scheduler->lock, NULL);
+	pthread_cond_init(&hub->scheduler->update_cond, NULL);
+	pthread_mutex_init(&hub->stop_lock, NULL);
+	pthread_mutex_init(&hub->print_lock, NULL);
+	return (1);
+}
+
 int	init_hub(t_hub *hub)
 {
 	int	i;
@@ -68,10 +83,7 @@ int	init_hub(t_hub *hub)
 				pthread_mutex_destroy(&hub->dongles[i++].lock);
 			free(hub->dongles);
 		}
-		printf("Error: Failed to initiate hub");
 		return (0);
 	}
-	pthread_mutex_init(&hub->stop_lock, NULL);
-	pthread_mutex_init(&hub->print_lock, NULL);
-	return (1);
+	return (init_scheduler(hub));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hub.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bokim <bokim@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 15:46:33 by bokim             #+#    #+#             */
-/*   Updated: 2026/04/17 15:54:27 by bokim            ###   ########.fr       */
+/*   Updated: 2026/05/10 17:02:59 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,12 @@ void	clean_hub(t_hub *hub)
 		pthread_mutex_destroy(&hub->dongles[i].lock);
 		pthread_mutex_destroy(&hub->coders[i].compile_lock);
 		i++;
+	}
+	if (hub->scheduler->nodes)
+	{
+		pthread_mutex_destroy(&hub->scheduler->lock);
+		pthread_cond_destroy(&hub->scheduler->update_cond);
+		free(hub->scheduler->nodes);
 	}
 	pthread_mutex_destroy(&hub->stop_lock);
 	pthread_mutex_destroy(&hub->print_lock);

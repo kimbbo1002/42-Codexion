@@ -6,7 +6,7 @@
 /*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 13:54:43 by bokim             #+#    #+#             */
-/*   Updated: 2026/04/19 21:10:17 by pc               ###   ########.fr       */
+/*   Updated: 2026/05/10 18:30:38 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,29 @@ typedef struct s_coder
 	t_hub				*hub;
 }						t_coder;
 
+typedef struct s_heap_node
+{
+	int					coder_id;
+	unsigned long		priority;
+}						t_heap_node;
+
+typedef struct s_heap
+{
+	t_heap_node			*nodes;
+	int					size;
+	pthread_mutex_t		lock;
+	pthread_cond_t		update_cond;
+}						t_heap;
+
 typedef struct s_hub
 {
 	pthread_t			monitor_id;
 	t_config			*config;
 	t_coder				*coders;
 	t_dongle			*dongles;
+	t_heap				*scheduler;
 
+	unsigned long		count;
 	unsigned long		start_time;
 	int					running;
 	pthread_mutex_t		stop_lock;
@@ -95,6 +111,10 @@ void					yield_edf(t_coder *coder);
 
 // monitor.c
 void					*monitor_threads(void *hub_struct);
+
+// scheduler.c
+void					wait_for_turn(t_coder *coder);
+void					heap_pop(t_heap *heap);
 
 // utils.c
 unsigned long			get_time(void);

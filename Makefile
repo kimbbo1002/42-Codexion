@@ -5,7 +5,7 @@ INC_DIR = inc/
 SRC_DIR = src/
 OBJ_DIR = obj/
 
-SRC_FILES = coder_compile.c\
+SRC_FILES =	coder_compile.c\
 			coder.c\
 			dongle.c\
 			hub.c\
@@ -13,6 +13,7 @@ SRC_FILES = coder_compile.c\
 			main.c\
 			monitor.c\
 			parsing.c\
+			scheduler.c\
 			utils.c
 SRCS = $(addprefix $(SRC_DIR), $(SRC_FILES))
 OBJS = $(addprefix $(OBJ_DIR), $(SRC_FILES:.c=.o))
@@ -22,7 +23,7 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
-$(OBJ_DIR)%.o: $(SRC_DIR)%.c
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c $(INC_DIR)codexion.h
 	@mkdir -p $(OBJ_DIR)
 	$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
 
